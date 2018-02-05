@@ -1,0 +1,31 @@
+ANSWERS.txt
+-----------
+
+1.) Compiled hello_world.c with `gcc hello_world.c -o hello_world.c`.
+
+    The routine `puts` is used to print "Hello World!", while `printf` is used
+    to print each of the arguments (puts is used even though only printf appears
+    in the source because the strings did not have format arguments).
+
+
+2.) I used Cutter v1.1 (A radare2 GUI frontend) just to disassemble the program
+    and view it.
+
+    The password decryption routine is the function that starts at 0x004005BD.
+    The main function passes the string at memory location 0x00400748 and the
+    length 0x1C (=28) to this function. If we examine the memory at that
+    location, we get the string:
+
+        \x84\xf4\x83\xe7\xb8\xcb\xa2\xcf
+        \xbf\xd3\xb6\xe9\x8f\xfa\x94\xcb
+        \xb3\xdc\xae\xf1\x83\xe6\x90\xf5
+        \x87\xf4\x91\xe3\x9e
+
+    The password decryption algorithm is loops through the encrypted password
+    and XORs each encrypted byte with the previous encrypted byte (the first
+    encrypted byte is XORed with 0xFF).
+
+    The minimum decrypted password is "{pwd_simple_fun_xor_reverser", but 
+    any string that has this prefix will be accepted, since only the first 0x1C
+    (=28) character are compared (if the length had been 0x1D, the closing 
+    bracket would have been required).
