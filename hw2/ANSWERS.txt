@@ -1,0 +1,26 @@
+ANSWERS.txt
+-----------
+
+1.) Buffer Overflow
+    
+    The overflow is in the function validate_user_password. The function calls
+    gets with the stack address rbp-0x100. Since the return address is on the
+    stack after the base pointer, it is at rbp + 0x8, so if we write a string of
+    length 0x108 followed by a memory address, the program will jump to that
+    memory address.
+
+    If we want to run the spawn_shell function, that memory address is 0x400798,
+    so we add that after the 0x108 random characters, we will get a shell. (Code
+    in buffer_overflow.py).
+
+2.) Indexing Error
+
+    The issue in user input validation is that the program only checks if the
+    input is less than 0x3E7, but does not check if the input is greater than or
+    equal to 0, so inputting negative numbers will access memory before the 
+    buffer. The password happens to be 0x100 bytes before, which means if we 
+    input -64 = -0x40 (since the index is multiplied by 4 to index ints), we get
+    the first 4 bytes of the password.
+
+    The python script indexing_error.py enters inputs and parses the result to
+    get the password in string form.
